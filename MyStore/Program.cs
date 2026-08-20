@@ -1,25 +1,33 @@
 using Microsoft.EntityFrameworkCore;
 using MyStore.Data;
+using MyStore.Interfaces;
+using MyStore.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Add services to the container.
+// 1. Configuración de Base de Datos
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
-
+// 2. Controladores
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
+// 3. Inyección del Repositorio (El Taquero)
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+// 4. Configuración de Swagger (La página de prueba)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 5. Mostrar Swagger solo en modo Desarrollo
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
