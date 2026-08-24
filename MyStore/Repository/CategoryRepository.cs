@@ -14,16 +14,21 @@ namespace MyStore.Repository
             _context = context;
         }
 
-        public Category AddCategory(Category category)
+        public bool AddCategory(Category category)
         {
             _context.Categories.Add(category);
-            _context.SaveChanges();
-            return category;
+            return Save();
+        }
+
+        public bool DeleteCategory(Category category)
+        {
+            _context.Remove(category);
+            return Save();
         }
 
         public ICollection<Category> GetAllCategories()
         {
-            return _context.Categories.ToList();
+            return _context.Categories.OrderBy(c => c.Id).ToList();
         }
 
         public Category? GetCategoryByDesc(string desc)
@@ -36,5 +41,16 @@ namespace MyStore.Repository
             return _context.Categories.FirstOrDefault(c => c.Id == id);
         }
 
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0;
+        }
+
+        public bool UpdateCategory(Category category)
+        {
+            _context.Update(category);
+            return Save();
+        }
     }
 }

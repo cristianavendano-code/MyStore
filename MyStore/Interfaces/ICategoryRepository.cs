@@ -7,6 +7,9 @@ namespace MyStore.Interfaces
         ICollection<Category> GetAllCategories();
         Category? GetCategoryById(int id);
         Category? GetCategoryByDesc(string desc);
-        Category AddCategory(Category category);
+        bool AddCategory(Category category);
+        bool UpdateCategory(Category category);
+        bool DeleteCategory(Category category);
+        bool Save();
     }
 }

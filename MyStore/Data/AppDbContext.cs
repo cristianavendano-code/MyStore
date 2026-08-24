@@ -17,6 +17,6 @@ namespace MyStore.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SalesItems { get; set; }
-
+            
     }
 }

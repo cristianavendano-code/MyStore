@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+
 using MyStore.Data;
 using MyStore.Interfaces;
 using MyStore.Repository;
@@ -7,23 +9,30 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// 1. Configuración de Base de Datos
+// Configuración de Base de Datos
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// 2. Controladores
+// Controladores
 builder.Services.AddControllers();
 
-// 3. Inyección del Repositorio (El Taquero)
+// Inyección del Repositorio
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// 4. Configuración de Swagger (La página de prueba)
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+});
+
+// Configuración de Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 5. Mostrar Swagger solo en modo Desarrollo
+// Mostrar Swagger solo en modo Desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
