@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyStore.DTO.Membership;
 using MyStore.Interfaces;
 using MyStore.Models;
+using MyStore.Repository;
 
 namespace MyStore.Controllers
 {
@@ -65,6 +66,38 @@ namespace MyStore.Controllers
             var newMembership = _membershipRepository.AddMembership(membershipModel);
 
             return Ok("Membership added succesfully!");
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateMembership(int id, [FromBody]  MembershipUpdateDto membership)
+        {
+            var membershipToModify = _membershipRepository.GetMembershipById(id);
+            if (membershipToModify == null)
+            {
+                return NotFound($"Membership with Id {id} doesn't exist");
+            }
+
+            if (membership == null)
+            {
+                return BadRequest("Mmebership is null");
+            }
+
+            _mapper.Map(membership, membershipToModify);
+            var membershipUpdated = _membershipRepository.UpdateMembership(membershipToModify);
+            return Ok($"Mmebership with Id {id} was succesfully updated!");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMembership(int id)
+        {
+            var membershipToDelete = _membershipRepository.GetMembershipById(id);
+            if (membershipToDelete == null)
+            {
+                return NotFound($"Mmebership with Id {id} doesn't exist");
+            }
+
+            var membershipDeleted = _membershipRepository.DeleteMembership(membershipToDelete);
+            return NoContent();
         }
     }
 }

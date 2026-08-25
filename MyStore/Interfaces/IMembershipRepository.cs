@@ -7,6 +7,8 @@ namespace MyStore.Interfaces
         ICollection<Membership> GetMemberships();
         Membership? GetMembershipById(int id);
         bool AddMembership(Membership membership);
+        bool UpdateMembership(Membership membership);
+        bool DeleteMembership(Membership membership);
         bool Save();
     }
 }

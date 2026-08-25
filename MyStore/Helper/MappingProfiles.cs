@@ -16,6 +16,7 @@ namespace MyStore.Helper
 
             CreateMap<Membership, MembershipResponseDto>();
             CreateMap<MembershipCreateDto, Membership>();
+            CreateMap<MembershipUpdateDto, Membership>();
 
             CreateMap<Product, ProductResponseDto>();
             CreateMap<ProductCreateDto, Product>();

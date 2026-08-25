@@ -33,7 +33,19 @@ namespace MyStore.Repository
 
         public ICollection<Membership> GetMemberships()
         {
-            return _context.Memberships.ToList();
+            return _context.Memberships.OrderBy(m => m.Id).ToList();
+        }
+
+        public bool UpdateMembership(Membership membership)
+        {
+            _context.Update(membership);
+            return Save();
+        }
+
+        public bool DeleteMembership(Membership membership)
+        {
+            _context.Remove(membership);
+            return Save();
         }
     }
 }
