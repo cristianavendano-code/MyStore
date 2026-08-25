@@ -20,6 +20,7 @@ namespace MyStore.Helper
 
             CreateMap<Product, ProductResponseDto>();
             CreateMap<ProductCreateDto, Product>();
+            CreateMap<ProductUpdateDto, Product>();
 
         }
     }

@@ -66,5 +66,77 @@ namespace MyStore.Controllers
 
             return Ok("Product added succesfully!");
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProduct(int id, [FromBody] ProductUpdateDto product)
+        {
+            var productToModify = _productRepository.GetProductById(id);
+            if (productToModify == null)
+            {
+                return NotFound($"Product with Id {id} doesn't exist");
+            }
+
+            if (product == null)
+            {
+                return BadRequest("Product is null");
+            }
+
+            _mapper.Map(product, productToModify);
+            var productUpdated = _productRepository.UpdateProduct(productToModify);
+            return Ok($"Product with Id {id} was succesfully updated!");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProduct(int id)
+        {
+            var productToDelete = _productRepository.GetProductById(id);
+            if (productToDelete == null)
+            {
+                return NotFound($"Product with Id {id} doesn't exist");
+            }
+
+            var productDeleted = _productRepository.DeleteProduct(productToDelete);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/addStock")]
+        public IActionResult AddStock(int id, [FromBody] ProductAddStockDto stock)
+        {
+            if (stock == null || stock.QuantityToAdd <= 0)
+            {
+                return BadRequest("The quantity to add must be bigger or equal to 0");
+            }
+
+            var productToUpdate = _productRepository.GetProductById(id);
+            if (productToUpdate == null)
+            {
+                return NotFound($"Product with Id {id} doesn't exist");
+            }
+
+            productToUpdate.Stock += stock.QuantityToAdd;
+            _productRepository.UpdateProduct(productToUpdate);
+
+            return Ok($"Stock for product with Id {id} was successfully updated!");
+        }
+
+        [HttpPatch("{id}/subtractStock")]
+        public IActionResult SubStock(int id, [FromBody] ProductSubStockDto stock)
+        {
+            if (stock == null || stock.QuantityToSubtract <= 0)
+            {
+                return BadRequest("The quantity to subtract must be bigger or equal to 0");
+            }
+
+            var productToUpdate = _productRepository.GetProductById(id);
+            if (productToUpdate == null)
+            {
+                return NotFound($"Product with Id {id} doesn't exist");
+            }
+
+            productToUpdate.Stock -= stock.QuantityToSubtract;
+            _productRepository.UpdateProduct(productToUpdate);
+
+            return Ok($"Stock for product with Id {id} was successfully updated!");
+        }
     }
 }

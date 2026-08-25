@@ -20,6 +20,12 @@ namespace MyStore.Repository
             return Save();
         }
 
+        public bool DeleteProduct(Product product)
+        {
+            _context.Remove(product);
+            return Save();
+        }
+
         public ICollection<Product> GetAllProducts()
         {
             return _context.Products.Include(p => p.Category).ToList();
@@ -39,6 +45,17 @@ namespace MyStore.Repository
         {
             var saved = _context.SaveChanges();
             return saved > 0;
+        }
+
+        public bool SaveChangesOnly()
+        {
+            return Save();
+        }
+
+        public bool UpdateProduct(Product product)
+        {
+            _context.Update(product);
+            return Save();
         }
     }
 }
