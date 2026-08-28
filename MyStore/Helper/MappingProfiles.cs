@@ -4,6 +4,7 @@ using AutoMapper;
 using MyStore.DTO.Membership;
 using MyStore.DTO.Product;
 using MyStore.DTO.Client;
+using MyStore.DTO.Sale;
 
 namespace MyStore.Helper
 {
@@ -26,6 +27,9 @@ namespace MyStore.Helper
             CreateMap<Client, ClientResponseDto>();
             CreateMap<ClientCreateDto, Client>();
             CreateMap<ClientUpdateDto, Client>();
+
+            CreateMap<SaleCreateDto, Sale>();
+            CreateMap<Sale, SaleResponseDto>();
         }
     }
 }

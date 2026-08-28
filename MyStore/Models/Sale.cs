@@ -3,9 +3,10 @@
     public class Sale
     {
         public int Id { get; set; }
+        public required int ClientId { get; set; }
         public required Client Client { get; set; }
-        public required string Status { get; set; }
-        public decimal Total { get; set; }
-        public DateTime Date { get; set; }
+        public required string Status { get; set; } = "Pendiente";
+        public decimal Total { get; set; } = 0m;
+        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
 }
