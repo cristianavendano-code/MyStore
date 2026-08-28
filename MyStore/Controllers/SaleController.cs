@@ -73,7 +73,7 @@ namespace MyStore.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteSale(int id)
         {
             var saleToDelete = _saleRepository.GetSaleById(id);
