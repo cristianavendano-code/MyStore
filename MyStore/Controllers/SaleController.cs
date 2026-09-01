@@ -14,12 +14,16 @@ namespace MyStore.Controllers
     public class SaleController : ControllerBase
     {
         private readonly ISaleRepository _saleRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly ISaleItemRepository _saleItemRepository;
         private readonly IMapper _mapper;
 
-        public SaleController(ISaleRepository saleRepository, IMapper mapper)
+        public SaleController(ISaleRepository saleRepository, IMapper mapper, IProductRepository productRepository, ISaleItemRepository saleItemRepository)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
+            _productRepository = productRepository;
+            _saleItemRepository = saleItemRepository;  
         }
 
         [HttpPost]
@@ -68,8 +72,21 @@ namespace MyStore.Controllers
             {
                 return NotFound($"Sale with Id {id} doesn't exist");
             }
+            var itemsInSale = _saleItemRepository.GetAllItemsBySaleId(id);
+
+            foreach (var item in itemsInSale)
+            {
+                var productInDb = _productRepository.GetProductById(item.ProductId);
+
+                if (productInDb != null)
+                {
+                    productInDb.Stock -= item.Quantity;
+                }
+            }
+
             saleToUpdate.Status = "Comprado";
             _saleRepository.SaveChangesOnly();
+
             return NoContent();
         }
 

@@ -14,11 +14,6 @@ namespace MyStore.Repository
             _context = context;
         }
 
-        public bool ChangeStatus(Sale sale)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool AddSale(Sale sale)
         {
             _context.Sales.Add(sale);

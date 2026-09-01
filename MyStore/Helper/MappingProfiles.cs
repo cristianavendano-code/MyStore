@@ -5,6 +5,7 @@ using MyStore.DTO.Membership;
 using MyStore.DTO.Product;
 using MyStore.DTO.Client;
 using MyStore.DTO.Sale;
+using MyStore.DTO.SaleItem;
 
 namespace MyStore.Helper
 {
@@ -30,6 +31,9 @@ namespace MyStore.Helper
 
             CreateMap<SaleCreateDto, Sale>();
             CreateMap<Sale, SaleResponseDto>();
+
+            CreateMap<SaleItem, SaleItemResponseDto>();
+            CreateMap<SaleItemCreateDto, SaleItem>();
         }
     }
 }
