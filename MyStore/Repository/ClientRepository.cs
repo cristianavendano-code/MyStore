@@ -2,6 +2,7 @@
 using MyStore.Data;
 using MyStore.Interfaces;
 using MyStore.Models;
+using System.Xml.Linq;
 
 namespace MyStore.Repository
 {
@@ -23,6 +24,11 @@ namespace MyStore.Repository
         {
             _context.Clients.Remove(client);
             return Save();
+        }
+
+        public Client? GetClientByEmail(string email)
+        {
+            return _context.Clients.Include(c => c.Membership).FirstOrDefault(c => c.Email == email);
         }
 
         public Client? GetClientById(int id)

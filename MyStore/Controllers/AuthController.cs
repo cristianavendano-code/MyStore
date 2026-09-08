@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
+using MyStore.Interfaces;
 
 namespace MyStore.Controllers
 {
@@ -13,17 +14,21 @@ namespace MyStore.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly IClientRepository _clientRepository;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IConfiguration config, IClientRepository clientRepository)
         {
 
             _config = config;
+            _clientRepository = clientRepository;
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserLoginDto loginDto)
         {
-            if (loginDto.Email != "admin@mystore.com" || loginDto.Password != "12345")
+            var client = _clientRepository.GetClientByEmail(loginDto.Email);
+
+            if (client == null || client.password != loginDto.Password)
             {
                 return Unauthorized("Incorrect Credentials");
             }
@@ -31,8 +36,8 @@ namespace MyStore.Controllers
             var claims = new[]
             {
                 //sub : user id
-                new Claim(JwtRegisteredClaimNames.Sub, "1"),
-                new Claim(JwtRegisteredClaimNames.Email, loginDto.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, client.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, client.Email),
 
                 // jti : unique token id
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using MyStore.DTO.Category;
 using MyStore.Interfaces;
 using MyStore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyStore.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase

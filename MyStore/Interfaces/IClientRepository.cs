@@ -12,6 +12,6 @@ namespace MyStore.Interfaces
         bool UpdateClient(Client client);
         bool DeleteClient(Client client);
         bool Save();
-
+        Client? GetClientByEmail(string email);
     }
 }

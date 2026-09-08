@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.DTO.Product;
@@ -6,9 +7,12 @@ using MyStore.DTO.Sale;
 using MyStore.Interfaces;
 using MyStore.Models;
 using MyStore.Repository;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace MyStore.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SaleController : ControllerBase
@@ -27,15 +31,20 @@ namespace MyStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSale([FromBody] SaleCreateDto sale)
+        public IActionResult CreateSale()
         {
-            if (sale == null)
-            {
-                return BadRequest("Sale is null");
-            }
-            var saleModel = _mapper.Map<Sale>(sale);
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
-            var newProduct = _saleRepository.AddSale(saleModel);
+            if (userIdString == null)
+            {
+                return Unauthorized("Invalid Token");
+            }
+            int clientId = int.Parse(userIdString);
+
+            var newSale = new Sale { ClientId = clientId };
+
+            _saleRepository.AddSale(newSale);
 
             return Ok("Sale added succesfully!");
         }
